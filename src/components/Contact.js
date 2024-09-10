@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 
-function Contact({contact}) {
+const Contact = ({contact}) =>      {
     return (
         <Link to={`/contacts/${contact.id}`} className="contact__item">
             <div className="contact__header">
@@ -27,7 +27,7 @@ function Contact({contact}) {
 
             </div>
         </Link>
-    );
+    )
 }
 
 export default Contact;

@@ -1,4 +1,10 @@
-// rsc, rsf  - wiecej w abbreviation settings
+// wiecej w abbreviation settings
+//  rsf - normal function
+// rsc - arrow function
+
+
+
+export default Header;
 
 
 import React from 'react';
