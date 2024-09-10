@@ -2,11 +2,6 @@
 //  rsf - normal function
 // rsc - arrow function
 
-
-
-export default Header;
-
-
 import React from 'react';
 
 const Header = ({toggleModal, numberOfContacts}) => {
