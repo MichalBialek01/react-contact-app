@@ -47,7 +47,7 @@ function App() {
             <dialog ref={modalRef} className="modal" id="modal">
                 <div className="modal__header">
                     <h3>New Contact</h3>
-                    <i className="bi bi-x-lg"></i>
+                    <i onClick={() => {toggleModal(false)}} className="bi bi-x-lg"></i>
                 </div>
                 <div className="divider"></div>
                 <div className="modal__body">
@@ -83,7 +83,7 @@ function App() {
                             </div>
                         </div>
                         <div className="form_footer">
-                            <button type="button" className="btn btn-danger">Cancel</button>
+                            <button onClick={() => {toggleModal(false)}} type="button" className="btn btn-danger">Cancel</button>
                             <button type="submit" className="btn">Save</button>
                         </div>
                     </form>
