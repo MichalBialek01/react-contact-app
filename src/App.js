@@ -1,24 +1,51 @@
 import './App.css';
 import React, {useEffect, useRef, useState} from "react";
-import {getContacts} from "./api/ContactService";
+import {getContacts, saveContact, updateContact, updatePhoto} from "./api/ContactService";
 import Header from "./components/Header";
 import ContactList from "./components/ContactList";
 import {Navigate, Route, Router, Routes} from "react-router-dom";
+import ContactDetails from "./components/ContactDetails";
 
 function App() {
     const modalRef = useRef();
+    const fileRef = useRef();
     const [data, setData] = useState({});
     const [currentPage, setCurrentPage] = useState(0);
-
-    const [file,setFile] = useState(undefined);
+    const [file, setFile] = useState(undefined);
     const [values, setValues] = useState({
         name: '',
         email: '',
         phone: '',
         address: '',
         title: '',
-        status: ''
+        status: '',
     });
+
+    const handleNewContact = async (event) => {
+        event.preventDefault();
+        try {
+            const { data } = await saveContact(values);
+            const formData = new FormData();
+            formData.append('file', file, file.name);
+            formData.append('id', data.id);
+            const { data: photoUrl } = await updatePhoto(formData);
+            toggleModal(false);
+            setFile(undefined);
+            fileRef.current.value = null;
+            setValues({
+                name: '',
+                email: '',
+                phone: '',
+                address: '',
+                title: '',
+                status: '',
+            })
+            getAllContacts();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
 
     const getAllContacts = async (page = 0, size = 10) => {
         try {
@@ -53,6 +80,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Navigate to={'/contacts'}/>}/>
                             <Route path="/contacts" element={<ContactList data={data} currentPage={currentPage} getAllContacts={getAllContacts}/>}/>
+                            <Route path="/contacts/:id" element={<ContactDetails updateContact={updateContact} updateImage={updatePhoto} />}/>
                         </Routes>
                 </div>
             </main>
@@ -66,7 +94,7 @@ function App() {
                 </div>
                 <div className="divider"></div>
                 <div className="modal__body">
-                    <form>
+                    <form onSubmit={handleNewContact}>
                         <div className="user-details">
                             <div className="input-box">
                                 <span className="details">Name</span>
@@ -94,7 +122,7 @@ function App() {
                             </div>
                             <div className="file-input">
                                 <span className="details">Profile Photo</span>
-                                <input type="file" onChange={(event) => {setFile(event.target.files[0])}} name="photo" required />
+                                <input type="file" onChange={(event) => {setFile(event.target.files[0])}} ref={fileRef} name="photo" required />
                             </div>
                         </div>
                         <div className="form_footer">
