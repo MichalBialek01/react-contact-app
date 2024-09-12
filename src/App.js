@@ -62,6 +62,18 @@ function App() {
         show ? modalRef.current.showModal() : modalRef.current.close()
     }
 
+    const updateContact = async () => {
+
+    }
+
+    const updateImage = async (formData) => {
+        try {
+            const { data: photoUrl } = await updatePhoto(formData);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
 
     useEffect(() => {
         getAllContacts();
@@ -80,7 +92,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Navigate to={'/contacts'}/>}/>
                             <Route path="/contacts" element={<ContactList data={data} currentPage={currentPage} getAllContacts={getAllContacts}/>}/>
-                            <Route path="/contacts/:id" element={<ContactDetails updateContact={updateContact} updateImage={updatePhoto} />}/>
+                            <Route path="/contacts/:id" element={<ContactDetails updateContact={updateContact} updateImage={updateImage} />}/>
                         </Routes>
                 </div>
             </main>
