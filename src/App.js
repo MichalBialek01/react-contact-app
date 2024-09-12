@@ -1,10 +1,13 @@
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css'
 import React, {useEffect, useRef, useState} from "react";
 import {getContacts, saveContact, updateContact, updatePhoto} from "./api/ContactService";
 import Header from "./components/Header";
 import ContactList from "./components/ContactList";
 import {Navigate, Route, Router, Routes} from "react-router-dom";
 import ContactDetails from "./components/ContactDetails";
+import {toastError, toastSuccess} from "./api/ToastService";
+import {ToastContainer} from "react-toastify";
 
 function App() {
     const modalRef = useRef();
@@ -29,7 +32,7 @@ function App() {
             setData(data)
             console.log(data)
         } catch (error) {
-
+            toastError(error.message)
         }
     }
     const onChange = (event) => {
@@ -43,7 +46,7 @@ function App() {
             const formData = new FormData();
             formData.append('file', file, file.name);
             formData.append('id', data.id);
-            const { data: photoUrl } = await updatePhoto(formData);
+            const { data: photoURL } = await updatePhoto(formData);
             toggleModal(false);
             setFile(undefined);
             fileRef.current.value = null;
@@ -57,7 +60,7 @@ function App() {
             })
             getAllContacts();
         } catch (error) {
-            console.log(error);
+            toastError(error.message)
         }
     };
 
@@ -67,9 +70,10 @@ function App() {
 
     const updateImage = async (formData) => {
         try {
-            const { data: photoUrl } = await updatePhoto(formData);
+            const { data: photoURL } = await updatePhoto(formData);
+            toastSuccess("Photo updated!");
         } catch (error) {
-            console.log(error);
+            toastError(error)
         }
     };
 
@@ -78,9 +82,6 @@ function App() {
     }, []);
 
 
-    const setParams = (event) => {
-        setValues({...values,[event.target.name]: event.target.value});
-    };
 
 
     const updateContact = async (contact) => {
@@ -88,7 +89,7 @@ function App() {
             const { data }  = await saveContact(contact);
             console.log(data)
         }catch (error) {
-            console.log(error);
+            toastError(error.message)
         }
 
 
@@ -102,6 +103,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Navigate to={'/contacts'}/>}/>
                             <Route path="/contacts" element={<ContactList data={data} currentPage={currentPage} getAllContacts={getAllContacts}/>}/>
+                            {/*That's prop drilling, but for small project is sufficient */}
                             <Route path="/contacts/:id" element={<ContactDetails updateContact={updateContact} updateImage={updateImage} />}/>
                         </Routes>
                 </div>
@@ -155,6 +157,7 @@ function App() {
                 </div>
             </dialog>
 
+            <ToastContainer/>
 
 
         </>
