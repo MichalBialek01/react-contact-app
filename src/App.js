@@ -13,6 +13,7 @@ function App() {
     const [currentPage, setCurrentPage] = useState(0);
     const [file, setFile] = useState(undefined);
     const [values, setValues] = useState({
+        id:'',
         name: '',
         email: '',
         phone: '',
@@ -20,6 +21,20 @@ function App() {
         title: '',
         status: '',
     });
+
+    const getAllContacts = async (page = 0, size = 10) => {
+        try {
+            setCurrentPage(page)
+            const {data} = await getContacts(page, size)
+            setData(data)
+            console.log(data)
+        } catch (error) {
+
+        }
+    }
+    const onChange = (event) => {
+        setValues({ ...values, [event.target.name]: event.target.value });
+    };
 
     const handleNewContact = async (event) => {
         event.preventDefault();
@@ -46,24 +61,8 @@ function App() {
         }
     };
 
-
-    const getAllContacts = async (page = 0, size = 10) => {
-        try {
-            setCurrentPage(page)
-            const {data} = await getContacts(page, size)
-            setData(data)
-            console.log(data)
-        } catch (error) {
-
-        }
-    }
-
     const toggleModal = (show) => {
         show ? modalRef.current.showModal() : modalRef.current.close()
-    }
-
-    const updateContact = async () => {
-
     }
 
     const updateImage = async (formData) => {
@@ -74,7 +73,6 @@ function App() {
         }
     };
 
-
     useEffect(() => {
         getAllContacts();
     }, []);
@@ -83,6 +81,18 @@ function App() {
     const setParams = (event) => {
         setValues({...values,[event.target.name]: event.target.value});
     };
+
+
+    const updateContact = async (contact) => {
+        try {
+            const { data }  = await saveContact(contact);
+            console.log(data)
+        }catch (error) {
+            console.log(error);
+        }
+
+
+    }
 
     return (
         <>
@@ -110,27 +120,27 @@ function App() {
                         <div className="user-details">
                             <div className="input-box">
                                 <span className="details">Name</span>
-                                <input type="text" value={values.name} onChange={setParams} name="name" required />
+                                <input type="text" value={values.name} onChange={onChange} name="name" required />
                             </div>
                             <div className="input-box">
                                 <span className="details">Email</span>
-                                <input type="text" value={values.email} onChange={setParams} name="email" required />
+                                <input type="text" value={values.email} onChange={onChange} name="email" required />
                             </div>
                             <div className="input-box">
                                 <span className="details">Title</span>
-                                <input type="text" value={values.title} onChange={setParams} name="title" required />
+                                <input type="text" value={values.title} onChange={onChange} name="title" required />
                             </div>
                             <div className="input-box">
                                 <span className="details">Phone Number</span>
-                                <input type="text" value={values.phone} onChange={setParams} name="phone" required />
+                                <input type="text" value={values.phone} onChange={onChange} name="phone" required />
                             </div>
                             <div className="input-box">
                                 <span className="details">Address</span>
-                                <input type="text" value={values.address} onChange={setParams} name="address" required />
+                                <input type="text" value={values.address} onChange={onChange} name="address" required />
                             </div>
                             <div className="input-box">
                                 <span className="details">Account Status</span>
-                                <input type="text" value={values.status} onChange={setParams} name="status" required />
+                                <input type="text" value={values.status} onChange={onChange} name="status" required />
                             </div>
                             <div className="file-input">
                                 <span className="details">Profile Photo</span>

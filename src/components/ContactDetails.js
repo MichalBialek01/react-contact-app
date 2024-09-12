@@ -1,11 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Link, useParams} from "react-router-dom";
-import {getContact, saveContact, updatePhoto} from "../api/ContactService";
+import {getContact} from "../api/ContactService";
 
 const ContactDetails = ({updateContact, updateImage}) => {
     const inputRef = useRef();
 
     const [contact, setContact] = useState({
+        id:'',
         name: '',
         email: '',
         phone: '',
@@ -44,16 +45,16 @@ const ContactDetails = ({updateContact, updateImage}) => {
         }
     }
 
+    const onChange = (event) => {
+        setContact({ ...contact, [event.target.name]: event.target.value });
+    };
     const {id} = useParams();
-    console.log(id);
 
+
+    console.log(id);
 
     const selectImage = () => {
         inputRef.current.click();
-    };
-
-    const onChange = (event) => {
-        setContact({ ...contact, [event.target.name]: event.target.value });
     };
 
     useEffect(() => {
@@ -94,8 +95,7 @@ const ContactDetails = ({updateContact, updateImage}) => {
                                 </div>
                                 <div className="input-box">
                                     <span className="details">Address</span>
-                                    <input type="text" value={contact.address} onChange={onChange} name="address"
-                                           required/>
+                                    <input type="text" value={contact.address} onChange={onChange} name="address" required/>
                                 </div>
                                 <div className="input-box">
                                     <span className="details">Title</span>
